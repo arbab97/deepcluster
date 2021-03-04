@@ -5,16 +5,14 @@
 # LICENSE file in the root directory of this source tree.
 #
 #!/bin/bash
-
-DIR="/media/rabi/Data/ThesisData/tinyImagenet/tiny-imagenet-200/train"
+DIR="/content/tiny-imagenet-200/train2"
 ARCH="alexnet"
 LR=0.05
 WD=-5
-K=4 
-WORKERS=4
-EXP="/home/rabi/Documents/Thesis/deepcluster_misc_data"
-PYTHON="/media/rabi/Data/ThesisData/condaEnvs/deepCluster_pytorch3/bin/python"
-#PYTHON="/home/rabi/anaconda3/envs/gpu//bin/python"
+K=10000
+WORKERS=12
+EXP="exp"
+PYTHON="/usr/local/envs/deepCluster_pytorch4/bin/python"
 
 mkdir -p ${EXP}
 
