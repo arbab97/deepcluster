@@ -210,6 +210,26 @@ def main(args):
 
         # save cluster assignments
         cluster_log.log(deepcluster.images_lists)
+        
+        #!! FINALLY  Saving the result of trained model , 
+
+        # for i, (input_tensor, target) in enumerate(train_dataloader):
+        #     input_var = torch.autograd.Variable(input_tensor.cuda())
+        #     output = model(input_var)            
+
+        with torch.no_grad():
+            for i, (input_tensor, target) in enumerate(train_dataloader):
+                inputs, inputs_augmented, ind, image_with_path = data
+                inputs = inputs.view(-1, 3*360 * 360)  #change this accordingly
+                if use_cuda:
+                    inputs = inputs.to(device)
+                outputs=F.softmax(net(inputs),dim=1)
+                predictions=torch.argmax(outputs,dim=1).cpu().numpy()
+                all_image_with_path=all_image_with_path+(list(image_with_path))
+                all_predictions=all_predictions+(list(predictions))
+        final_result={"Image Name":all_image_with_path, "Prediction":all_predictions}
+
+
 
 
 def train(loader, model, crit, opt, epoch):
@@ -267,7 +287,7 @@ def train(loader, model, crit, opt, epoch):
         loss = crit(output, target_var)
 
         # record loss
-        losses.update(loss.data[0], input_tensor.size(0))
+        losses.update(loss.data, input_tensor.size(0))
 
         # compute gradient and do SGD step
         opt.zero_grad()
