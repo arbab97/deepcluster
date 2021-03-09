@@ -15,9 +15,10 @@ WORKERS=4
 EXP="/home/rabi/Documents/Thesis/deepcluster_misc_data"
 PYTHON="/home/rabi/anaconda3/envs/deepCluster_pytorch4/bin/python"
 BATCH_SIZE=32
+EPOCHS=2
 #PYTHON="/home/rabi/anaconda3/envs/gpu//bin/python"
 
 mkdir -p ${EXP}
 
 CUDA_VISIBLE_DEVICES=0 ${PYTHON} main.py ${DIR} --exp ${EXP} --arch ${ARCH} \
-  --lr ${LR} --wd ${WD} --k ${K} --sobel --verbose --workers ${WORKERS} --batch ${BATCH_SIZE}
+  --lr ${LR} --wd ${WD} --k ${K} --sobel --verbose --workers ${WORKERS} --epochs ${EPOCHS} --batch ${BATCH_SIZE}

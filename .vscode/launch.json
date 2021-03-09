@@ -1,0 +1,42 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    // DIR="/media/rabi/Data/ThesisData/tinyImagenet/tiny-imagenet-200/train2"
+    // ARCH="alexnet"
+    // LR=0.05
+    // WD=-5
+    // K=5 
+    // WORKERS=4
+    // EXP="/home/rabi/Documents/Thesis/deepcluster_misc_data"
+    // PYTHON="/home/rabi/anaconda3/envs/deepCluster_pytorch4/bin/python"
+    // BATCH_SIZE=32
+    // EPOCHS=2
+
+    
+    "version": "0.2.0",
+    "configurations": [
+        
+        {
+            "name": "deepcluster",
+            "type": "python",
+            "request": "launch",
+            "program": "main.py",
+            "console": "integratedTerminal",
+            "args": [
+                "/media/rabi/Data/ThesisData/tinyImagenet/tiny-imagenet-200/train2", "--exp", "/home/rabi/Documents/Thesis/deepcluster_misc_data", 
+                "--arch", "alexnet" ,
+                "--lr" ,"0.05",
+                 "--wd" ,"-5" ,
+                 "--k" ,"3", 
+                 "--sobel", 
+                 "--verbose", 
+                 "--workers", "4" ,
+                 "--epochs" ,"1" ,
+                 "--batch" ,"32"
+             ], 
+             "justMyCode": true
+        },
+        
+    ]
+}

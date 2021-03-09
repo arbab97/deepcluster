@@ -20,7 +20,8 @@ import torch.optim
 import torch.utils.data
 import torchvision.transforms as transforms
 import torchvision.datasets as datasets
-
+import csv
+import pandas as pd
 import clustering
 import models
 from util import AverageMeter, Logger, UnifLabelSampler
@@ -62,6 +63,26 @@ def parse_args():
     parser.add_argument('--exp', type=str, default='', help='path to exp folder')
     parser.add_argument('--verbose', action='store_true', help='chatty')
     return parser.parse_args()
+
+final_result=dict()
+
+#writing custom dataset to enable returning the path:# src: https://gist.github.com/andrewjong/6b02ff237533b3b2c554701fb53d5c4d
+class ImageFolderWithPaths(datasets.ImageFolder):
+    """Custom dataset that includes image file paths. Extends
+    torchvision.datasets.ImageFolder
+    """
+
+    # override the __getitem__ method. this is the method that dataloader calls
+    def __getitem__(self, index):
+        # this is what ImageFolder normally returns 
+        original_tuple = super(ImageFolderWithPaths, self).__getitem__(index)
+        # the image file path
+        path = self.imgs[index][0]
+        # make a new tuple that includes original and the path
+        tuple_with_path = (original_tuple + (path,))
+        return tuple_with_path
+
+
 
 
 def main(args):
@@ -126,7 +147,7 @@ def main(args):
 
     # load the data
     end = time.time()
-    dataset = datasets.ImageFolder(args.data, transform=transforms.Compose(tra))
+    dataset = ImageFolderWithPaths(args.data, transform=transforms.Compose(tra))
     if args.verbose:
         print('Load dataset: {0:.2f} s'.format(time.time() - end))
 
@@ -211,25 +232,22 @@ def main(args):
         # save cluster assignments
         cluster_log.log(deepcluster.images_lists)
         
-        #!! FINALLY  Saving the result of trained model , 
+   #!! FINALLY  Saving the result of trained model , 
 
-        # for i, (input_tensor, target) in enumerate(train_dataloader):
-        #     input_var = torch.autograd.Variable(input_tensor.cuda())
-        #     output = model(input_var)            
-
-        # with torch.no_grad():
-        #     for i, (input_tensor, target) in enumerate(train_dataloader):
-        #         input_var = input_var  #change this accordingly
-        #         if use_cuda:
-        #             inputs = inputs.to(device)
-        #         outputs=F.softmax(net(inputs),dim=1)
-        #         predictions=torch.argmax(outputs,dim=1).cpu().numpy()
-        #         all_image_with_path=all_image_with_path+(list(image_with_path))
-        #         all_predictions=all_predictions+(list(predictions))
-        # final_result={"Image Name":all_image_with_path, "Prediction":all_predictions}
-
-
-
+    all_image_with_path=list()
+    all_predictions=list()
+    with torch.no_grad():
+        for i, (input_tensor, target, image_with_path) in enumerate(dataloader):    #NOT using the train_dataloader (which was reshuffled and balanced later. but the original one)
+            input_var = torch.autograd.Variable(input_tensor.cuda())
+            outputs=model(input_var) 
+            predictions=torch.argmax(outputs,dim=1).cpu().numpy()
+            all_image_with_path=all_image_with_path+(list(image_with_path))
+            all_predictions=all_predictions+(list(predictions))
+    final_result={"Image Name":all_image_with_path, "Prediction":all_predictions}
+    
+    #Now, writing teh final results to csv. 
+    output_file_name=args.exp+"/results_deepcluster.csv"
+    (pd.DataFrame(final_result).to_csv(output_file_name, header=True, mode='w'))
 
 def train(loader, model, crit, opt, epoch):
     """Training of the CNN.
@@ -315,8 +333,8 @@ def compute_features(dataloader, model, N):
     batch_time = AverageMeter()
     end = time.time()
     model.eval()
-    # discard the label information in the dataloader
-    for i, (input_tensor, _) in enumerate(dataloader):
+    # discard the label information && path information in the dataloader
+    for i, (input_tensor, _, _) in enumerate(dataloader):
         input_var = torch.autograd.Variable(input_tensor.cuda(), volatile=True)
         aux = model(input_var).data.cpu().numpy()
 
