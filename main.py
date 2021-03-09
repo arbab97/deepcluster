@@ -65,6 +65,7 @@ def parse_args():
     return parser.parse_args()
 
 final_result=dict()
+final_stats=pd.DataFrame(columns=["Epochs", "Clustering loss", "ConvNet loss" ])
 
 #writing custom dataset to enable returning the path:# src: https://gist.github.com/andrewjong/6b02ff237533b3b2c554701fb53d5c4d
 class ImageFolderWithPaths(datasets.ImageFolder):
@@ -213,6 +214,8 @@ def main(args):
                   'Clustering loss: {2:.3f} \n'
                   'ConvNet loss: {3:.3f}'
                   .format(epoch, time.time() - end, clustering_loss, loss))
+            final_stats.loc[len(final_stats)]=[epoch, clustering_loss,float( loss)]
+
             try:
                 nmi = normalized_mutual_info_score(
                     clustering.arrange_clustering(deepcluster.images_lists),
@@ -246,8 +249,12 @@ def main(args):
     final_result={"Image Name":all_image_with_path, "Prediction":all_predictions}
     
     #Now, writing teh final results to csv. 
-    output_file_name=args.exp+"/results_deepcluster.csv"
-    (pd.DataFrame(final_result).to_csv(output_file_name, header=True, mode='w'))
+    output_file_name_results=args.exp+"/results_deepcluster.csv"
+    output_file_name_stats=args.exp+"/stats_deepcluster.csv"
+    
+    (pd.DataFrame(final_result).to_csv(output_file_name_results, header=True, mode='w'))
+
+    (pd.DataFrame(final_stats).to_csv(output_file_name_stats, header=True, mode='w'))
 
 def train(loader, model, crit, opt, epoch):
     """Training of the CNN.

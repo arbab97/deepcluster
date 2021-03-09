@@ -5,15 +5,15 @@
 # LICENSE file in the root directory of this source tree.
 #
 #!/bin/bash
-DIR="/content/deepcluster/batsnet_train"
+DIR="/content/batsnet_train"
 ARCH="vgg16"
 LR=0.05
 WD=-5
-K=5
+K=3
 WORKERS=12
-EXP="exp2"
+EXP="exp01"
 PYTHON="/usr/local/envs/deepCluster_pytorch4/bin/python"
-EPOCHS=50
+EPOCHS=1
 BATCH_SIZE=50
 mkdir -p ${EXP}
 
