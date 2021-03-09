@@ -13,7 +13,7 @@ WD=-5
 K=5 
 WORKERS=4
 EXP="/home/rabi/Documents/Thesis/deepcluster_misc_data"
-PYTHON="/media/rabi/Data/ThesisData/condaEnvs/deepCluster_pytorch4/bin/python"
+PYTHON="/home/rabi/anaconda3/envs/deepCluster_pytorch4/bin/python"
 BATCH_SIZE=32
 #PYTHON="/home/rabi/anaconda3/envs/gpu//bin/python"
 
