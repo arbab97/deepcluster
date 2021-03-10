@@ -16,7 +16,15 @@
     
     "version": "0.2.0",
     "configurations": [
-        
+        {
+            "name": "filename_to_image_rename",
+            "type": "python",
+            "request": "launch",
+            "program": "filename_to_image_rename.py",
+            "console": "integratedTerminal",
+
+        },
+
         {
             "name": "deepcluster",
             "type": "python",
