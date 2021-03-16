@@ -237,15 +237,13 @@ def main(args):
         
    #!! FINALLY  Saving the result of trained model , 
 
-    all_image_with_path=list()
-    all_predictions=list()
+    all_image_with_path=[]
+    all_predictions=[]
     with torch.no_grad():
-        for i, (input_tensor, target, image_with_path) in enumerate(dataloader):    #NOT using the train_dataloader (which was reshuffled and balanced later. but the original one)
-            input_var = torch.autograd.Variable(input_tensor.cuda())
-            outputs=model(input_var) 
-            predictions=torch.argmax(outputs,dim=1).cpu().numpy()
-            all_image_with_path=all_image_with_path+(list(image_with_path))
-            all_predictions=all_predictions+(list(predictions))
+        for i in range(len(train_dataset)):    #NOT using the train_dataloader (which was reshuffled and balanced later. but the original one)
+            image_data, cluster_allocated,path =train_dataset[i]
+            all_image_with_path.append(path)
+            all_predictions.append(cluster_allocated)
     final_result={"Image Name":all_image_with_path, "Prediction":all_predictions}
     
     #Now, writing teh final results to csv. 
@@ -283,7 +281,7 @@ def train(loader, model, crit, opt, epoch):
     )
 
     end = time.time()
-    for i, (input_tensor, target) in enumerate(loader):
+    for i, (input_tensor, target, path) in enumerate(loader):
         data_time.update(time.time() - end)
 
         # save checkpoint

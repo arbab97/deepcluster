@@ -67,7 +67,7 @@ class ReassignedDataset(data.Dataset):
         img = pil_loader(path)
         if self.transform is not None:
             img = self.transform(img)
-        return img, pseudolabel
+        return img, pseudolabel, path   ## changed from img, pseudolabel 
 
     def __len__(self):
         return len(self.imgs)

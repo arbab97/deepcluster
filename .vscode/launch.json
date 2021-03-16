@@ -32,7 +32,7 @@
             "program": "main.py",
             "console": "integratedTerminal",
             "args": [
-                "/media/rabi/Data/ThesisData/tinyImagenet/tiny-imagenet-200/train2", "--exp", "/home/rabi/Documents/Thesis/deepcluster_misc_data", 
+                "/media/rabi/Data/ThesisData/audio data analysis/audio-clustering/plots_10march/spectrograms/batsnet_train", "--exp", "/home/rabi/Documents/Thesis/deepcluster_misc_data/01", 
                 "--arch", "alexnet" ,
                 "--lr" ,"0.05",
                  "--wd" ,"-5" ,
@@ -41,7 +41,7 @@
                  "--verbose", 
                  "--workers", "4" ,
                  "--epochs" ,"1" ,
-                 "--batch" ,"32"
+                 "--batch" ,"50"
              ], 
              "justMyCode": true
         },
